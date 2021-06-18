@@ -13,8 +13,15 @@ axios.interceptors.response.use(
     return response;
   },
   function(error) {
-    if (error?.response?.status === 400) {
-      alert(error.response.data?.data);
+    const statusCode = error?.response?.status;
+    switch(statusCode) {
+      case 400:
+        alert(error.response.data?.data);
+        break;
+      case 401:
+      case 403:
+        alert(error.response.data?.message);
+        break;
     }
     return Promise.reject(error?.response);
   }

@@ -3,6 +3,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
 import axios from 'axios';
 
+import IMPORT_CONSTS from "constants/import";
+
 const useStyles = makeStyles((theme) => ({
   content: {
     backgroundColor: theme.palette.background.paper,
@@ -30,13 +32,22 @@ export default function CSVFileImport({url, title}: CSVFileImportProps) {
     setFile('');
   };
 
+  const getAuthToken = () => {
+    return localStorage.getItem(IMPORT_CONSTS.LocalStorageTokenKey);
+  }
+
   const uploadFile = async (e: any) => {
       // Get the presigned URL
+      const authToken = getAuthToken();
+
       const response = await axios({
         method: 'GET',
         url,
         params: {
           name: encodeURIComponent(file.name)
+        },
+        headers: {
+          'Authorization': `Basic ${authToken}`
         }
       })
       console.log('File to upload: ', file.name)
